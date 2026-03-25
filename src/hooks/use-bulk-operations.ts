@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 import { useFileBrowserStore } from "@/stores/file-browser-store";
 
 export function useBulkOperations() {
@@ -12,7 +13,7 @@ export function useBulkOperations() {
   const bulkDelete = useCallback(
     async (keys: string[]) => {
       try {
-        const res = await fetch("/api/r2/objects", {
+        const res = await apiFetch("/api/r2/objects", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ keys }),
@@ -31,7 +32,7 @@ export function useBulkOperations() {
   const bulkMove = useCallback(
     async (keys: string[], destination: string) => {
       try {
-        const res = await fetch("/api/r2/object", {
+        const res = await apiFetch("/api/r2/object", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "move", keys, destination }),
@@ -49,7 +50,7 @@ export function useBulkOperations() {
 
   const bulkDownload = useCallback(async (keys: string[]) => {
     try {
-      const res = await fetch("/api/r2/download", {
+      const res = await apiFetch("/api/r2/download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keys }),
@@ -76,7 +77,7 @@ export function useBulkOperations() {
     async (clipboardKeys: string[], operation: "copy" | "cut") => {
       try {
         const action = operation === "cut" ? "move" : "move";
-        const res = await fetch("/api/r2/object", {
+        const res = await apiFetch("/api/r2/object", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

@@ -127,7 +127,7 @@ function BucketSwitcher({ onManage }: { onManage: () => void }) {
 
 export function Sidebar({ onManageConnections }: { onManageConnections: () => void }) {
   const { appView, setAppView, setPrefix, setSearchOpen, setAnalyticsOpen } = useFileBrowserStore();
-  const { user, activeConnection, logout } = useAuthStore();
+  const { user, activeConnection, logout, isGuest } = useAuthStore();
   const { data: analytics } = useAnalytics(!!activeConnection);
 
   const usedStorage = analytics?.totalSize || 0;
@@ -341,20 +341,24 @@ export function Sidebar({ onManageConnections }: { onManageConnections: () => vo
         <div className="flex items-center gap-3">
           <div
             className="w-9 h-9 rounded-[var(--radius)] flex items-center justify-center text-[11px] font-bold shrink-0"
-            style={{ background: "var(--gradient-brand)", color: "white" }}
+            style={{ background: isGuest ? "rgba(255,255,255,0.1)" : "var(--gradient-brand)", color: "white" }}
           >
-            {user?.name?.slice(0, 2).toUpperCase() || "??"}
+            {isGuest ? "G" : user?.name?.slice(0, 2).toUpperCase() || "??"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-bold text-white truncate">{user?.name}</p>
-            <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>{user?.email}</p>
+            <p className="text-[12px] font-bold text-white truncate">
+              {isGuest ? "Guest User" : user?.name}
+            </p>
+            <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {isGuest ? "Credentials in browser only" : user?.email}
+            </p>
           </div>
           <button
             type="button"
             onClick={logout}
             className="w-8 h-8 shrink-0 rounded-[8px] flex items-center justify-center cursor-pointer transition-colors hover:bg-white/[0.08]"
             style={{ color: "rgba(255,255,255,0.4)" }}
-            title="Sign out"
+            title={isGuest ? "Exit guest mode" : "Sign out"}
           >
             <LogOut size={15} />
           </button>

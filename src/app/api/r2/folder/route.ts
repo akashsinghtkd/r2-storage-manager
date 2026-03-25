@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createFolder, deleteFolderRecursive } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 
 export async function POST(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const { prefix } = (await request.json()) as { prefix: string };
 
     if (!prefix) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const { prefix } = (await request.json()) as { prefix: string };
 
     if (!prefix) {

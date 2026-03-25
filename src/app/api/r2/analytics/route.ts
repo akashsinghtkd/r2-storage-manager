@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getStorageAnalytics } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const analytics = await getStorageAnalytics(ctx);
     return NextResponse.json(analytics);
   } catch (error) {

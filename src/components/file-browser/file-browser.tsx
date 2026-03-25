@@ -10,7 +10,7 @@ import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import type { R2Object, SortField, SortDirection } from "@/types/r2";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Database, Plus } from "lucide-react";
+import { Sun, Moon, Database, Plus, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -47,6 +47,109 @@ function sortItems(items: R2Object[], field: SortField, direction: SortDirection
 }
 
 function NoBucketState({ onConnect }: { onConnect: () => void }) {
+  const { isGuest, enterGuestMode, updateGuestCredentials } = useAuthStore();
+
+  const [accountId, setAccountId] = useState("");
+  const [accessKeyId, setAccessKeyId] = useState("");
+  const [secretAccessKey, setSecretAccessKey] = useState("");
+  const [bucketName, setBucketName] = useState("");
+  const [showSecret, setShowSecret] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+
+  const handleGuestConnect = (e: React.FormEvent) => {
+    e.preventDefault();
+    setConnecting(true);
+    const creds = { accountId, accessKeyId, secretAccessKey, bucketName };
+    if (isGuest) {
+      updateGuestCredentials(creds);
+    } else {
+      enterGuestMode(creds);
+    }
+    setTimeout(() => setConnecting(false), 500);
+  };
+
+  // Guest mode: show inline credential form
+  if (isGuest) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-[460px]"
+        >
+          <div className="text-center mb-8">
+            <div className="relative mx-auto mb-6 w-20 h-20">
+              <div
+                className="absolute inset-0 rounded-[22px] flex items-center justify-center"
+                style={{ background: "var(--accent-subtle)", border: "1px solid color-mix(in srgb, var(--accent) 15%, transparent)" }}
+              >
+                <Database size={32} style={{ color: "var(--accent)" }} />
+              </div>
+            </div>
+            <h2 className="text-[22px] font-extrabold tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
+              Connect your R2 bucket
+            </h2>
+            <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>
+              Your credentials are stored locally in your browser — never sent to any server
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleGuestConnect}
+            className="rounded-[var(--radius-xl)] p-6 space-y-4"
+            style={{ background: "var(--bg-input)", border: "1px solid var(--border-light)" }}
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Account ID</label>
+                <input value={accountId} onChange={(e) => setAccountId(e.target.value)} required placeholder="5a7fcb06f..."
+                  className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
+                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Bucket Name</label>
+                <input value={bucketName} onChange={(e) => setBucketName(e.target.value)} required placeholder="my-bucket"
+                  className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
+                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Access Key ID</label>
+              <input value={accessKeyId} onChange={(e) => setAccessKeyId(e.target.value)} required placeholder="a324547d683..."
+                className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
+                style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Secret Access Key</label>
+              <div className="relative">
+                <input type={showSecret ? "text" : "password"} value={secretAccessKey} onChange={(e) => setSecretAccessKey(e.target.value)} required
+                  placeholder="7c2a11d9c3b36c..."
+                  className="w-full h-11 px-4 pr-11 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
+                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
+                <button type="button" onClick={() => setShowSecret(!showSecret)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer p-1 rounded-[6px] hover:bg-[var(--bg-surface-hover)]"
+                  style={{ color: "var(--text-muted)" }}>
+                  {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+            </div>
+            <motion.button
+              type="submit"
+              disabled={connecting}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center justify-center gap-2.5 w-full h-12 mt-2 rounded-[var(--radius-lg)] text-[14px] font-bold text-white cursor-pointer transition-all disabled:opacity-60"
+              style={{ background: "var(--gradient-brand)", boxShadow: "0 8px 24px -4px var(--accent-glow)" }}
+            >
+              {connecting ? <Loader2 size={16} className="animate-spin" /> : <><Database size={16} /> Connect <ArrowRight size={15} /></>}
+            </motion.button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Registered users: show the onboarding with "Connect Bucket" button
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <motion.div
@@ -55,7 +158,6 @@ function NoBucketState({ onConnect }: { onConnect: () => void }) {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="text-center max-w-[440px]"
       >
-        {/* Illustration */}
         <div className="relative mx-auto mb-8 w-24 h-24">
           <div
             className="absolute inset-0 rounded-[24px] flex items-center justify-center"
@@ -77,30 +179,6 @@ function NoBucketState({ onConnect }: { onConnect: () => void }) {
         <p className="text-[14px] leading-relaxed mb-8 max-w-[360px] mx-auto" style={{ color: "var(--text-muted)" }}>
           Add your Cloudflare R2 credentials to start browsing, uploading, and managing your cloud storage.
         </p>
-
-        {/* Steps */}
-        <div
-          className="rounded-[var(--radius-lg)] p-5 mb-8 text-left space-y-3.5"
-          style={{ background: "var(--bg-input)", border: "1px solid var(--border-light)" }}
-        >
-          {[
-            { step: "1", text: "Get API tokens from Cloudflare R2 dashboard" },
-            { step: "2", text: "Enter your Account ID, Access Key, and Bucket Name" },
-            { step: "3", text: "Start managing files instantly" },
-          ].map(({ step, text }) => (
-            <div key={step} className="flex items-center gap-3.5">
-              <div
-                className="w-7 h-7 rounded-[8px] flex items-center justify-center shrink-0 text-[11px] font-bold"
-                style={{ background: "var(--accent-subtle)", color: "var(--accent)" }}
-              >
-                {step}
-              </div>
-              <p className="text-[13px] font-medium" style={{ color: "var(--text-secondary)" }}>
-                {text}
-              </p>
-            </div>
-          ))}
-        </div>
 
         <motion.button
           type="button"
@@ -128,9 +206,12 @@ export function FileBrowser() {
     clearSelection, selectedKeys, detailItem, setDetailItem,
   } = useFileBrowserStore();
 
-  const { activeConnection } = useAuthStore();
+  const { activeConnection, isGuest, guestCredentials } = useAuthStore();
 
-  const hasActiveBucket = !!activeConnection;
+  // For guests, check if they've actually entered credentials (not just empty placeholders)
+  const hasActiveBucket = isGuest
+    ? !!(guestCredentials?.accountId && guestCredentials?.accessKeyId && guestCredentials?.secretAccessKey && guestCredentials?.bucketName)
+    : !!activeConnection;
 
   const { data, isLoading, error } = useObjects(currentPrefix);
   const { uploads, clearCompleted } = useUpload(currentPrefix);

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { putObject } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 import { getMimeType } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const prefix = (formData.get("prefix") as string) || "";

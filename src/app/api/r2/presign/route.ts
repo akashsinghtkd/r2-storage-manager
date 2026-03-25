@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPresignedUrl } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 
 export async function POST(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const { key, expiresIn } = (await request.json()) as {
       key: string;
       expiresIn?: number;

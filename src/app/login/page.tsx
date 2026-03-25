@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Cloud, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { Cloud, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, Sparkles, UserCircle } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
+import { useAuthStore } from "@/stores/auth-store";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -316,6 +317,40 @@ export default function LoginPage() {
             >
               Create one
             </a>
+          </p>
+
+          {/* Guest mode divider */}
+          <div className="flex items-center gap-4 mt-6">
+            <Separator.Root className="flex-1 h-px" style={{ background: "var(--border)" }} />
+            <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+              or skip login
+            </span>
+            <Separator.Root className="flex-1 h-px" style={{ background: "var(--border)" }} />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              useAuthStore.getState().enterGuestMode({
+                accountId: "",
+                accessKeyId: "",
+                secretAccessKey: "",
+                bucketName: "",
+              });
+              router.push("/");
+            }}
+            className="flex items-center justify-center gap-2.5 w-full h-12 mt-4 rounded-[var(--radius-lg)] text-[13px] font-semibold cursor-pointer transition-all hover:shadow-md active:scale-[0.98]"
+            style={{
+              background: "var(--bg-input)",
+              border: "1px solid var(--border)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            <UserCircle size={18} />
+            Continue as Guest
+          </button>
+          <p className="text-center text-[11px] mt-2" style={{ color: "var(--text-muted)", opacity: 0.7 }}>
+            You&apos;ll enter your R2 credentials directly — nothing is saved to any server
           </p>
         </motion.div>
       </div>

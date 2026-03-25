@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { apiFetch } from "@/lib/api";
 import type { UploadProgress } from "@/types/r2";
 
 export function useUpload(prefix: string) {
@@ -36,7 +37,7 @@ export function useUpload(prefix: string) {
           formData.append("files", file);
           formData.append("prefix", prefix);
 
-          const res = await fetch("/api/r2/upload", {
+          const res = await apiFetch("/api/r2/upload", {
             method: "POST",
             body: formData,
           });

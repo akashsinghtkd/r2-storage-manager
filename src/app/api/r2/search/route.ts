@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchObjects } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 
 export async function GET(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q");
     const maxResults = parseInt(searchParams.get("maxResults") || "100");

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listObjects, deleteObject, deleteObjects } from "@/lib/r2-operations";
-import { getUserR2Context } from "@/lib/user-r2";
+import { resolveR2Context } from "@/lib/user-r2";
 
 export async function GET(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const { searchParams } = new URL(request.url);
     const prefix = searchParams.get("prefix") || "";
     const delimiter = searchParams.get("delimiter") ?? "/";
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const ctx = await getUserR2Context();
+    const ctx = await resolveR2Context(request);
     const body = await request.json();
     const { keys } = body as { keys: string[] };
 

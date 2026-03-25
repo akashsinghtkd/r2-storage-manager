@@ -11,7 +11,7 @@ const PUBLIC_PATHS = ["/login", "/signup"];
 export function AuthGuard({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isLoading, isReady, fetchUser } = useAuthStore();
+  const { user, isGuest, isLoading, isReady, fetchUser } = useAuthStore();
 
   useEffect(() => {
     fetchUser();
@@ -20,13 +20,18 @@ export function AuthGuard({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isReady) return;
     const isPublicPage = PUBLIC_PATHS.includes(pathname);
-    if (!user && !isPublicPage) {
+    const isAuthenticated = !!user || isGuest;
+
+    // Redirect to login only if not authenticated and not on a public page
+    if (!isAuthenticated && !isPublicPage) {
       router.replace("/login");
     }
-    if (user && isPublicPage) {
+
+    // Redirect away from login/signup if already authenticated
+    if (isAuthenticated && isPublicPage) {
       router.replace("/");
     }
-  }, [user, isReady, pathname, router]);
+  }, [user, isGuest, isReady, pathname, router]);
 
   if (!isReady) {
     return (
@@ -67,9 +72,10 @@ export function AuthGuard({ children }: { children: ReactNode }) {
   }
 
   const isPublicPage = PUBLIC_PATHS.includes(pathname);
+  const isAuthenticated = !!user || isGuest;
 
   if (isPublicPage) return <>{children}</>;
-  if (!user) return null;
+  if (!isAuthenticated) return null;
 
   return <>{children}</>;
 }
