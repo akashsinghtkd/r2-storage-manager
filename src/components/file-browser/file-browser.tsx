@@ -11,6 +11,12 @@ import type { R2Object, SortField, SortDirection } from "@/types/r2";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { Sun, Moon, Database, Plus, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -60,140 +66,80 @@ function NoBucketState({ onConnect }: { onConnect: () => void }) {
     e.preventDefault();
     setConnecting(true);
     const creds = { accountId, accessKeyId, secretAccessKey, bucketName };
-    if (isGuest) {
-      updateGuestCredentials(creds);
-    } else {
-      enterGuestMode(creds);
-    }
+    if (isGuest) updateGuestCredentials(creds); else enterGuestMode(creds);
     setTimeout(() => setConnecting(false), 500);
   };
 
-  // Guest mode: show inline credential form
   if (isGuest) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-[460px]"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[480px]">
           <div className="text-center mb-8">
-            <div className="relative mx-auto mb-6 w-20 h-20">
-              <div
-                className="absolute inset-0 rounded-[22px] flex items-center justify-center"
-                style={{ background: "var(--accent-subtle)", border: "1px solid color-mix(in srgb, var(--accent) 15%, transparent)" }}
-              >
-                <Database size={32} style={{ color: "var(--accent)" }} />
-              </div>
+            <div className="mx-auto mb-6 w-20 h-20 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/20">
+              <Database size={32} className="text-primary" />
             </div>
-            <h2 className="text-[22px] font-extrabold tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>
-              Connect your R2 bucket
-            </h2>
-            <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-              Your credentials are stored locally in your browser — never sent to any server
-            </p>
+            <h2 className="text-2xl font-extrabold tracking-tight mb-2">Connect your R2 bucket</h2>
+            <p className="text-sm text-muted-foreground">Credentials stored in your browser only — never sent to any server</p>
           </div>
 
-          <form
-            onSubmit={handleGuestConnect}
-            className="rounded-[var(--radius-xl)] p-6 space-y-4"
-            style={{ background: "var(--bg-input)", border: "1px solid var(--border-light)" }}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Account ID</label>
-                <input value={accountId} onChange={(e) => setAccountId(e.target.value)} required placeholder="5a7fcb06f..."
-                  className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
-                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Bucket Name</label>
-                <input value={bucketName} onChange={(e) => setBucketName(e.target.value)} required placeholder="my-bucket"
-                  className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
-                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Access Key ID</label>
-              <input value={accessKeyId} onChange={(e) => setAccessKeyId(e.target.value)} required placeholder="a324547d683..."
-                className="w-full h-11 px-4 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
-                style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>Secret Access Key</label>
-              <div className="relative">
-                <input type={showSecret ? "text" : "password"} value={secretAccessKey} onChange={(e) => setSecretAccessKey(e.target.value)} required
-                  placeholder="7c2a11d9c3b36c..."
-                  className="w-full h-11 px-4 pr-11 rounded-[var(--radius)] text-[13px] font-mono outline-none transition-all"
-                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-primary)" }} />
-                <button type="button" onClick={() => setShowSecret(!showSecret)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer p-1 rounded-[6px] hover:bg-[var(--bg-surface-hover)]"
-                  style={{ color: "var(--text-muted)" }}>
-                  {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-            </div>
-            <motion.button
-              type="submit"
-              disabled={connecting}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-2.5 w-full h-12 mt-2 rounded-[var(--radius-lg)] text-[14px] font-bold text-white cursor-pointer transition-all disabled:opacity-60"
-              style={{ background: "var(--gradient-brand)", boxShadow: "0 8px 24px -4px var(--accent-glow)" }}
-            >
-              {connecting ? <Loader2 size={16} className="animate-spin" /> : <><Database size={16} /> Connect <ArrowRight size={15} /></>}
-            </motion.button>
-          </form>
+          <Card>
+            <CardContent className="p-6">
+              <form onSubmit={handleGuestConnect} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Account ID</Label>
+                    <Input value={accountId} onChange={(e) => setAccountId(e.target.value)} required placeholder="5a7fcb06f..." className="font-mono text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Bucket Name</Label>
+                    <Input value={bucketName} onChange={(e) => setBucketName(e.target.value)} required placeholder="my-bucket" className="font-mono text-xs" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Access Key ID</Label>
+                  <Input value={accessKeyId} onChange={(e) => setAccessKeyId(e.target.value)} required placeholder="a324547d683..." className="font-mono text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Secret Access Key</Label>
+                  <div className="relative">
+                    <Input type={showSecret ? "text" : "password"} value={secretAccessKey} onChange={(e) => setSecretAccessKey(e.target.value)}
+                      required placeholder="7c2a11d9c3b36c..." className="font-mono text-xs pr-10" />
+                    <button type="button" onClick={() => setShowSecret(!showSecret)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground p-0.5 rounded">
+                      {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+                <Button type="submit" size="lg" disabled={connecting} className="w-full h-12 gap-2.5 mt-2">
+                  {connecting ? <Loader2 size={16} className="animate-spin" /> : <><Database size={16} /> Connect <ArrowRight size={15} /></>}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </motion.div>
       </div>
     );
   }
 
-  // Registered users: show the onboarding with "Connect Bucket" button
   return (
     <div className="flex-1 flex items-center justify-center p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="text-center max-w-[440px]"
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="text-center max-w-[440px]">
         <div className="relative mx-auto mb-8 w-24 h-24">
-          <div
-            className="absolute inset-0 rounded-[24px] flex items-center justify-center"
-            style={{ background: "var(--accent-subtle)", border: "1px solid color-mix(in srgb, var(--accent) 15%, transparent)" }}
-          >
-            <Database size={36} style={{ color: "var(--accent)" }} />
+          <div className="absolute inset-0 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/20">
+            <Database size={36} className="text-primary" />
           </div>
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.15, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute -inset-3 rounded-[30px]"
-            style={{ background: "var(--accent-subtle)" }}
-          />
+          <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity }} className="absolute -inset-3 rounded-3xl bg-primary/10" />
         </div>
-
-        <h2 className="text-[22px] font-extrabold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
-          Connect your first bucket
-        </h2>
-        <p className="text-[14px] leading-relaxed mb-8 max-w-[360px] mx-auto" style={{ color: "var(--text-muted)" }}>
+        <h2 className="text-2xl font-extrabold tracking-tight mb-3">Connect your first bucket</h2>
+        <p className="text-sm leading-relaxed mb-8 max-w-[360px] mx-auto text-muted-foreground">
           Add your Cloudflare R2 credentials to start browsing, uploading, and managing your cloud storage.
         </p>
-
-        <motion.button
-          type="button"
-          onClick={onConnect}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="inline-flex items-center justify-center gap-2.5 h-12 px-8 rounded-[var(--radius-lg)] text-[14px] font-bold text-white cursor-pointer transition-all"
-          style={{
-            background: "var(--gradient-brand)",
-            boxShadow: "0 10px 30px -5px var(--accent-glow), 0 0 0 1px rgba(255,255,255,0.1) inset",
-          }}
-        >
-          <Plus size={17} />
-          Connect R2 Bucket
-        </motion.button>
+        <Button size="lg" onClick={onConnect} className="h-12 px-8 gap-2.5">
+          <Plus size={17} /> Connect R2 Bucket
+        </Button>
       </motion.div>
     </div>
   );
@@ -407,44 +353,31 @@ export function FileBrowser() {
 /* Dashboard-only header */
 function DashboardHeader() {
   const { theme, setTheme } = useTheme();
-  const { user } = useAuthStore();
+  const { user, isGuest } = useAuthStore();
   return (
-    <header
-      className="h-[58px] flex items-center justify-between px-6 md:px-8 shrink-0 gap-4"
-      style={{
-        borderBottom: "1px solid var(--border-light)",
-        background: "color-mix(in srgb, var(--bg-surface) 88%, transparent)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
-    >
-      <h2 className="text-[15px] font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>
-        Overview
-      </h2>
-      <div className="flex items-center gap-2.5">
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.94 }}
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="w-10 h-10 rounded-[var(--radius-lg)] flex items-center justify-center cursor-pointer transition-colors"
-          style={{
-            background: "var(--bg-input)",
-            border: "1px solid var(--border)",
-            boxShadow: "var(--shadow-xs)",
-          }}
-        >
-          <motion.div key={theme} initial={{ rotate: -30, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 350, damping: 20 }}>
-            {theme === "dark" ? <Sun size={17} strokeWidth={2} /> : <Moon size={17} strokeWidth={2} />}
-          </motion.div>
-        </motion.button>
-        <div
-          className="w-10 h-10 rounded-[var(--radius-lg)] flex items-center justify-center text-[11px] font-bold ring-2 ring-black/5 dark:ring-white/15"
-          style={{ background: "var(--gradient-brand)", color: "white", boxShadow: "0 4px 14px var(--accent-glow)" }}
-        >
-          {user?.name?.slice(0, 2).toUpperCase() || "??"}
+    <TooltipProvider>
+      <header className="h-[58px] flex items-center justify-between px-6 md:px-8 shrink-0 gap-4 border-b bg-card/80 backdrop-blur-md">
+        <h2 className="text-sm font-bold tracking-tight">Overview</h2>
+        <div className="flex items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="outline" className="h-10 w-10"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                <motion.div key={theme} initial={{ rotate: -30, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 20 }}>
+                  {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+                </motion.div>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Toggle theme</TooltipContent>
+          </Tooltip>
+          <Avatar className="h-10 w-10 border-2 border-primary/20">
+            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+              {isGuest ? "G" : user?.name?.slice(0, 2).toUpperCase() || "??"}
+            </AvatarFallback>
+          </Avatar>
         </div>
-      </div>
-    </header>
+      </header>
+    </TooltipProvider>
   );
 }
