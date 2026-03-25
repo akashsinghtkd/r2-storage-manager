@@ -1,0 +1,25 @@
+{
+  "name": "R2 Storage Manager",
+  "short_name": "R2 Manager",
+  "description": "Modern multi-tenant SaaS platform for managing Cloudflare R2 cloud storage",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07080d",
+  "theme_color": "#5b5cf0",
+  "orientation": "any",
+  "categories": ["developer", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

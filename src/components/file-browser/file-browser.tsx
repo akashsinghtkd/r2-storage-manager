@@ -72,48 +72,58 @@ function NoBucketState({ onConnect }: { onConnect: () => void }) {
 
   if (isGuest) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[480px]">
-          <div className="text-center mb-8">
-            <div className="mx-auto mb-6 w-20 h-20 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/20">
+      <div className="flex-1 flex min-h-0 items-center justify-center px-4 py-10 sm:px-6 sm:py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-[520px] mx-auto"
+        >
+          <div className="text-center mb-8 sm:mb-10 px-1">
+            <div className="mx-auto mb-5 sm:mb-6 w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center bg-primary/10 border border-primary/20">
               <Database size={32} className="text-primary" />
             </div>
-            <h2 className="text-2xl font-extrabold tracking-tight mb-2">Connect your R2 bucket</h2>
-            <p className="text-sm text-muted-foreground">Credentials stored in your browser only — never sent to any server</p>
+            <h2 className="text-2xl font-extrabold tracking-tight mb-2.5 sm:mb-3 px-1">
+              Connect your R2 bucket
+            </h2>
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[42ch] mx-auto px-2">
+              Credentials stored in your browser only — never sent to any server
+            </p>
           </div>
 
-          <Card>
-            <CardContent className="p-6">
-              <form onSubmit={handleGuestConnect} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+          <Card className="shadow-sm">
+            <CardContent className="p-6 sm:p-8 pt-7 sm:pt-8">
+              <form onSubmit={handleGuestConnect} className="space-y-5 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-4">
+                  <div className="space-y-2 min-w-0">
                     <Label>Account ID</Label>
-                    <Input value={accountId} onChange={(e) => setAccountId(e.target.value)} required placeholder="5a7fcb06f..." className="font-mono text-xs" />
+                    <Input value={accountId} onChange={(e) => setAccountId(e.target.value)} required placeholder="5a7fcb06f..." className="font-mono text-xs h-10" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 min-w-0">
                     <Label>Bucket Name</Label>
-                    <Input value={bucketName} onChange={(e) => setBucketName(e.target.value)} required placeholder="my-bucket" className="font-mono text-xs" />
+                    <Input value={bucketName} onChange={(e) => setBucketName(e.target.value)} required placeholder="my-bucket" className="font-mono text-xs h-10" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label>Access Key ID</Label>
-                  <Input value={accessKeyId} onChange={(e) => setAccessKeyId(e.target.value)} required placeholder="a324547d683..." className="font-mono text-xs" />
+                  <Input value={accessKeyId} onChange={(e) => setAccessKeyId(e.target.value)} required placeholder="a324547d683..." className="font-mono text-xs h-10" />
                 </div>
                 <div className="space-y-2">
                   <Label>Secret Access Key</Label>
                   <div className="relative">
                     <Input type={showSecret ? "text" : "password"} value={secretAccessKey} onChange={(e) => setSecretAccessKey(e.target.value)}
-                      required placeholder="7c2a11d9c3b36c..." className="font-mono text-xs pr-10" />
+                      required placeholder="7c2a11d9c3b36c..." className="font-mono text-xs h-10 pr-10" />
                     <button type="button" onClick={() => setShowSecret(!showSecret)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground p-0.5 rounded">
                       {showSecret ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
                   </div>
                 </div>
-                <Button type="submit" size="lg" disabled={connecting} className="w-full h-12 gap-2.5 mt-2">
-                  {connecting ? <Loader2 size={16} className="animate-spin" /> : <><Database size={16} /> Connect <ArrowRight size={15} /></>}
-                </Button>
+                <div className="pt-1 sm:pt-2">
+                  <Button type="submit" size="lg" disabled={connecting} className="w-full h-12 gap-2.5">
+                    {connecting ? <Loader2 size={16} className="animate-spin" /> : <><Database size={16} /> Connect <ArrowRight size={15} /></>}
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
