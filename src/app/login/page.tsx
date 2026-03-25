@@ -7,7 +7,6 @@ import { Cloud, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, Sparkles, UserCirc
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
@@ -43,29 +42,38 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* ── Left branding panel ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 p-10 relative overflow-hidden bg-sidebar text-sidebar-foreground">
+      {/* ── Left branding panel (always dark) ── */}
+      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 p-10 relative overflow-hidden"
+        style={{ background: "#0f1117", color: "#e2e8f0" }}>
+        {/* Gradient blobs */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-[30%] -left-[20%] w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(239 84% 67% / 0.5), transparent 70%)" }} />
-          <div className="absolute -bottom-[20%] -right-[10%] w-[400px] h-[400px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, hsl(270 76% 72% / 0.5), transparent 70%)" }} />
+          <div className="absolute -top-[30%] -left-[20%] w-[600px] h-[600px] rounded-full opacity-30"
+            style={{ background: "radial-gradient(circle, rgba(99,102,241,0.4), transparent 70%)" }} />
+          <div className="absolute -bottom-[20%] -right-[10%] w-[400px] h-[400px] rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4), transparent 70%)" }} />
         </div>
 
+        {/* Brand */}
         <div className="relative z-10 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary text-primary-foreground shadow-lg">
-            <Cloud size={22} strokeWidth={1.75} />
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+            style={{ background: "var(--gradient-brand)" }}>
+            <Cloud size={22} color="white" strokeWidth={1.75} />
           </div>
           <div>
-            <h1 className="text-lg font-extrabold tracking-tight">R2 Manager</h1>
-            <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Storage Platform</p>
+            <h1 className="text-lg font-extrabold tracking-tight text-white">R2 Manager</h1>
+            <p className="text-[11px] font-semibold tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.4)" }}>
+              Storage Platform
+            </p>
           </div>
         </div>
 
+        {/* Features */}
         <div className="relative z-10 space-y-8">
           <div>
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-4">
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-4 text-white">
               Manage your cloud<br />storage with ease
             </h2>
-            <p className="text-sm leading-relaxed max-w-[340px] text-muted-foreground">
+            <p className="text-sm leading-relaxed max-w-[340px]" style={{ color: "rgba(255,255,255,0.5)" }}>
               Connect multiple Cloudflare R2 buckets, browse files, upload, download and manage everything from one beautiful dashboard.
             </p>
           </div>
@@ -75,28 +83,38 @@ export default function LoginPage() {
               { label: "Drag & drop uploads", desc: "Upload files and folders with ease" },
               { label: "Real-time analytics", desc: "Storage insights at a glance" },
             ].map((f, i) => (
-              <motion.div key={f.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }} className="flex items-start gap-3.5">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-accent text-accent-foreground border border-border">
-                  <Sparkles size={14} />
+              <motion.div key={f.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }} className="flex items-start gap-3.5">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                  style={{ background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                  <Sparkles size={14} style={{ color: "#a5b4fc" }} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold">{f.label}</p>
-                  <p className="text-xs text-muted-foreground">{f.desc}</p>
+                  <p className="text-sm font-bold text-white">{f.label}</p>
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{f.desc}</p>
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
 
-        <p className="relative z-10 text-xs text-muted-foreground/40">Cloudflare R2 Storage Manager</p>
+        <p className="relative z-10 text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>
+          Cloudflare R2 Storage Manager
+        </p>
       </div>
 
       {/* ── Right form panel ── */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[420px]">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-16">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-[400px]"
+        >
           {/* Mobile brand */}
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary text-primary-foreground shadow-md">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-md"
+              style={{ background: "var(--gradient-brand)" }}>
               <Cloud size={20} strokeWidth={1.75} />
             </div>
             <span className="text-base font-extrabold tracking-tight">R2 Manager</span>
@@ -109,11 +127,11 @@ export default function LoginPage() {
 
           {/* OAuth */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <a href="/api/auth/google" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 gap-2.5")}>
+            <a href="/api/auth/google" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 gap-2.5 font-semibold")}>
               <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
               Google
             </a>
-            <a href="/api/auth/github" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 gap-2.5")}>
+            <a href="/api/auth/github" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 gap-2.5 font-semibold")}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
               GitHub
             </a>
@@ -121,12 +139,12 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-4 mb-6">
             <Separator className="flex-1" />
-            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">or</span>
+            <span className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground/70">or</span>
             <Separator className="flex-1" />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
                 className="rounded-lg px-4 py-3 text-sm font-medium bg-destructive/10 text-destructive border border-destructive/20">
@@ -137,42 +155,44 @@ export default function LoginPage() {
             <div className="space-y-2">
               <Label htmlFor="email">Email address</Label>
               <div className="relative">
-                <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
                 <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com" required className="pl-10 h-12" />
+                  placeholder="you@example.com" required className="pl-10 h-11" />
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <button type="button" className="text-xs font-medium text-primary cursor-pointer hover:underline">Forgot password?</button>
+                <button type="button" className="text-xs font-medium text-primary cursor-pointer hover:underline">
+                  Forgot password?
+                </button>
               </div>
               <div className="relative">
-                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
                 <Input id="password" type={showPassword ? "text" : "password"} value={password}
                   onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password"
-                  required className="pl-10 pr-12 h-12" />
+                  required className="pl-10 pr-12 h-11" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground/60 hover:text-foreground transition-colors p-1 rounded-md">
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <Button type="submit" size="lg" disabled={loading} className="w-full h-12 text-sm font-bold gap-2.5 mt-1">
+            <Button type="submit" size="lg" disabled={loading} className="w-full h-11 font-bold gap-2 mt-2">
               {loading ? <Loader2 size={18} className="animate-spin" /> : <>Sign in <ArrowRight size={16} /></>}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-8">
+          <p className="text-center text-sm text-muted-foreground mt-7">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="font-bold text-primary hover:underline">Create one</a>
+            <a href="/signup" className="font-semibold text-primary hover:underline">Create one</a>
           </p>
 
-          <div className="flex items-center gap-4 mt-6">
+          <div className="flex items-center gap-4 mt-6 mb-4">
             <Separator className="flex-1" />
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">or skip</span>
+            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/50">or skip</span>
             <Separator className="flex-1" />
           </div>
 
@@ -181,12 +201,12 @@ export default function LoginPage() {
               useAuthStore.getState().enterGuestMode({ accountId: "", accessKeyId: "", secretAccessKey: "", bucketName: "" });
               router.push("/");
             }}
-            className="w-full h-12 mt-4 gap-2.5 text-muted-foreground"
+            className="w-full h-11 gap-2.5 text-muted-foreground font-medium"
           >
             <UserCircle size={18} />
             Continue as Guest
           </Button>
-          <p className="text-center text-[11px] text-muted-foreground/60 mt-2">
+          <p className="text-center text-[11px] text-muted-foreground/50 mt-2.5">
             Your R2 credentials stay in your browser — nothing saved to any server
           </p>
         </motion.div>

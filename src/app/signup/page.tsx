@@ -48,28 +48,32 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex bg-background">
       {/* ── Left panel ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 p-10 relative overflow-hidden bg-sidebar text-sidebar-foreground">
+      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 p-10 relative overflow-hidden"
+        style={{ background: "#0f1117", color: "#e2e8f0" }}>
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-[30%] -left-[20%] w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(239 84% 67% / 0.5), transparent 70%)" }} />
-          <div className="absolute -bottom-[20%] -right-[10%] w-[400px] h-[400px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, hsl(270 76% 72% / 0.5), transparent 70%)" }} />
+          <div className="absolute -top-[30%] -left-[20%] w-[600px] h-[600px] rounded-full opacity-30"
+            style={{ background: "radial-gradient(circle, rgba(99,102,241,0.4), transparent 70%)" }} />
+          <div className="absolute -bottom-[20%] -right-[10%] w-[400px] h-[400px] rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4), transparent 70%)" }} />
         </div>
 
         <div className="relative z-10 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary text-primary-foreground shadow-lg">
-            <Cloud size={22} strokeWidth={1.75} />
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+            style={{ background: "var(--gradient-brand)" }}>
+            <Cloud size={22} color="white" strokeWidth={1.75} />
           </div>
           <div>
-            <h1 className="text-lg font-extrabold tracking-tight">R2 Manager</h1>
-            <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-muted-foreground">Storage Platform</p>
+            <h1 className="text-lg font-extrabold tracking-tight text-white">R2 Manager</h1>
+            <p className="text-[11px] font-semibold tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.4)" }}>Storage Platform</p>
           </div>
         </div>
 
         <div className="relative z-10 space-y-8">
           <div>
-            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-4">
+            <h2 className="text-3xl font-extrabold leading-tight tracking-tight mb-4 text-white">
               Start managing your<br />storage in minutes
             </h2>
-            <p className="text-sm leading-relaxed max-w-[340px] text-muted-foreground">
+            <p className="text-sm leading-relaxed max-w-[340px]" style={{ color: "rgba(255,255,255,0.5)" }}>
               Create your free account and connect your first Cloudflare R2 bucket. No credit card required.
             </p>
           </div>
@@ -79,27 +83,30 @@ export default function SignupPage() {
               { icon: Zap, label: "Instant setup", desc: "Connect in under 30 seconds" },
               { icon: Globe, label: "Access anywhere", desc: "Manage from any device" },
             ].map((f, i) => (
-              <motion.div key={f.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }} className="flex items-start gap-3.5">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-accent text-accent-foreground border border-border">
-                  <f.icon size={14} />
+              <motion.div key={f.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }} className="flex items-start gap-3.5">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                  style={{ background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                  <f.icon size={14} style={{ color: "#a5b4fc" }} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold">{f.label}</p>
-                  <p className="text-xs text-muted-foreground">{f.desc}</p>
+                  <p className="text-sm font-bold text-white">{f.label}</p>
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>{f.desc}</p>
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
 
-        <p className="relative z-10 text-xs text-muted-foreground/40">Cloudflare R2 Storage Manager</p>
+        <p className="relative z-10 text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>Cloudflare R2 Storage Manager</p>
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[420px]">
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-16">
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[400px]">
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-primary text-primary-foreground shadow-md">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white shadow-md"
+              style={{ background: "var(--gradient-brand)" }}>
               <Cloud size={20} strokeWidth={1.75} />
             </div>
             <span className="text-base font-extrabold tracking-tight">R2 Manager</span>
