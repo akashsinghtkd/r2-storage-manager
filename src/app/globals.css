@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+/* Scan app source only (smaller CSS output than repo-wide defaults). */
+@source "../**/*.{js,ts,jsx,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: light;
+  --sidebar-width: 280px;
+
+  --bg-body: #eceef2;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f4f5f8;
+  --bg-surface-active: #e8ecff;
+  --bg-sidebar: #0f1117;
+  --bg-sidebar-hover: rgba(255,255,255,0.055);
+  --bg-sidebar-active: rgba(99,102,241,0.22);
+  --bg-input: #f0f2f6;
+  --bg-overlay: rgba(15,23,42,0.55);
+  --bg-badge: #e8eaef;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-sidebar: #8b92a8;
+  --text-sidebar-active: #f8fafc;
+  --text-inverse: #ffffff;
+  --text-brand: #5b5cf0;
+
+  --accent: #5b5cf0;
+  --accent-hover: #4f46e5;
+  --accent-subtle: #eef0ff;
+  --accent-glow: rgba(91,92,240,0.38);
+  --gradient-brand: linear-gradient(135deg, #5b5cf0 0%, #7c3aed 52%, #a855f7 100%);
+
+  --success: #0d9488;
+  --success-subtle: #ecfdf8;
+  --warning: #d97706;
+  --warning-subtle: #fffbeb;
+  --danger: #dc2626;
+  --danger-subtle: #fef2f2;
+
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --ring: rgba(91,92,240,0.45);
+
+  --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.05), 0 2px 8px rgba(15,23,42,0.06);
+  --shadow-md: 0 4px 16px rgba(15,23,42,0.08);
+  --shadow-lg: 0 12px 40px rgba(15,23,42,0.1);
+  --shadow-xl: 0 24px 56px rgba(15,23,42,0.12);
+
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* File colors */
+  --file-folder: #f59e0b;
+  --file-image: #8b5cf6;
+  --file-video: #ec4899;
+  --file-audio: #14b8a6;
+  --file-code: #3b82f6;
+  --file-doc: #6b7280;
+  --file-archive: #f97316;
+  --file-pdf: #ef4444;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg-body: #07080d;
+  --bg-surface: #111318;
+  --bg-surface-hover: #181b22;
+  --bg-surface-active: #1e2240;
+  --bg-sidebar: #050608;
+  --bg-sidebar-hover: rgba(255,255,255,0.05);
+  --bg-sidebar-active: rgba(129,140,248,0.18);
+  --bg-input: #181b22;
+  --bg-overlay: rgba(0,0,0,0.7);
+  --bg-badge: #1c1f28;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-sidebar: #6b7280;
+  --text-sidebar-active: #f8fafc;
+  --text-brand: #a5b4fc;
+
+  --accent: #8b8cf8;
+  --accent-hover: #a5b4fc;
+  --accent-subtle: rgba(129,140,248,0.14);
+  --accent-glow: rgba(139,140,248,0.35);
+  --gradient-brand: linear-gradient(135deg, #8b8cf8 0%, #a78bfa 50%, #c084fc 100%);
+
+  --success: #34d399;
+  --success-subtle: rgba(16,185,129,0.12);
+  --warning: #fbbf24;
+  --warning-subtle: rgba(245,158,11,0.12);
+  --danger: #f87171;
+  --danger-subtle: rgba(239,68,68,0.12);
+
+  --border: #272a34;
+  --border-light: #1a1d26;
+  --ring: rgba(165,180,252,0.45);
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.28);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.55);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  height: 100dvh;
+  background-color: var(--bg-body);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(91, 92, 240, 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, rgba(124, 58, 237, 0.09), transparent 45%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(14, 165, 233, 0.06), transparent 50%);
+}
+
+.dark body {
+  background-image:
+    radial-gradient(ellipse 100% 70% at 50% -20%, rgba(129, 140, 248, 0.12), transparent 50%),
+    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(167, 139, 250, 0.08), transparent 40%);
+}
+
+/* Default scrollbars (thin; themed scroll areas override below) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-muted) 45%, transparent) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 40%, transparent);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-muted) 65%, transparent);
+}
+
+/* Sidebar nav: stable gutter + slim thumb (avoids layout jump / harsh overflow) */
+.sidebar-nav-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+.sidebar-nav-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 8px;
+}
+.sidebar-nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+.sidebar-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Main content / dashboard / detail: stable gutter, theme-aware thumb */
+.main-panel-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-muted) 50%, transparent) transparent;
+}
+.main-panel-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.main-panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 8px;
+  margin-inline: 4px;
+}
+.main-panel-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 40%, transparent);
+  border-radius: 999px;
+}
+.main-panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-muted) 65%, transparent);
+}
+
+::selection { background: var(--accent); color: white; }
+
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-input) 25%, var(--bg-surface-hover) 50%, var(--bg-input) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeUp 0.35s ease-out forwards;
+}
+
+/* Utility */
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Toast */
+[data-sonner-toaster] [data-sonner-toast] {
+  border-radius: var(--radius-lg) !important;
+  font-size: 13px !important;
+}
